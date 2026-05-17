@@ -99,10 +99,10 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
 router.patch('/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { folderId } = req.body; 
+    const { folderId, name } = req.body;
     const userId = req.user!.id;
 
-    
+
     const file = await File.findOne({ where: { id, userId } });
 
     if (!file) {
@@ -119,8 +119,14 @@ router.patch('/:id', authenticateToken, async (req: AuthRequest, res: Response) 
       }
     }
 
-    // Update folderId (setting it to null moves it to the root)
-    file.folderId = folderId || null;
+    if (folderId !== undefined) {
+      file.folderId = folderId || null;
+    }
+
+    if (name) {
+      file.name = name;
+    }
+
     await file.save();
 
     res.status(200).json(file);
