@@ -1,8 +1,9 @@
 import { Router, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { File } from '../models';
-import { authenticateToken, AuthRequest } from '../middlewares/authMiddleware';
 import { generatePresignedUrl, verifyFileExists } from '../services/s3Service';
+import { Folder, File } from '../models';
+import { authenticateToken, AuthRequest } from '../middlewares/authMiddleware';
+
 
 const router = Router();
 router.use(authenticateToken);
@@ -89,6 +90,40 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
 
     await file.destroy(); // Soft delete via paranoid
     res.status(200).json({ message: 'File deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.patch('/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { folderId } = req.body; 
+    const userId = req.user!.id;
+
+    
+    const file = await File.findOne({ where: { id, userId } });
+
+    if (!file) {
+      res.status(404).json({ error: 'File not found' });
+      return;
+    }
+
+    // verify the target folder exists and belongs to the user
+    if (folderId) {
+      const folder = await Folder.findOne({ where: { id: folderId, userId } });
+      if (!folder) {
+        res.status(404).json({ error: 'Target folder not found' });
+        return;
+      }
+    }
+
+    // Update folderId (setting it to null moves it to the root)
+    file.folderId = folderId || null;
+    await file.save();
+
+    res.status(200).json(file);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
