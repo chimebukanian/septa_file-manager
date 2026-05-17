@@ -2,11 +2,11 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
 class ShareToken extends Model {
-  public token!: string;
-  public fileId!: string;
-  public expiresAt!: Date;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare token: string;
+  declare fileId: string;
+  declare expiresAt: Date;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 ShareToken.init(

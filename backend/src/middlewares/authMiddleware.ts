@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { type Request, type Response, type NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
@@ -18,12 +18,19 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
     return;
   }
 
-  jwt.verify(token, JWT_SECRET, (err, user: any) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded: any) => {
     if (err) {
       res.status(403).json({ error: 'Forbidden: Invalid token' });
       return;
     }
-    req.user = { id: user.id };
+
+    if (!decoded || !decoded.id) {
+      res.status(403).json({ error: 'Forbidden: Token payload missing user ID. Please log in again.' });
+      return;
+    }
+
+    req.user = { id: decoded.id };
+    
     next();
   });
 };

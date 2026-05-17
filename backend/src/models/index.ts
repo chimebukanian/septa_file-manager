@@ -23,3 +23,4 @@ File.hasMany(ShareToken, { foreignKey: 'fileId', as: 'shares' });
 ShareToken.belongsTo(File, { foreignKey: 'fileId', as: 'file' });
 
 export { User, Folder, File, ShareToken };
+

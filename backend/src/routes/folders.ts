@@ -1,6 +1,6 @@
-import { Router, Response } from 'express';
+import { Router, type Response } from 'express';
 import { Folder, File } from '../models';
-import { authenticateToken, AuthRequest } from '../middlewares/authMiddleware';
+import { authenticateToken, type AuthRequest } from '../middlewares/authMiddleware';
 import { recursiveSoftDeleteFolder } from '../services/folderService';
 
 const router = Router();
@@ -35,6 +35,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
+
     const folders = await Folder.findAll({ where: { userId, parentId: null } });
     const files = await File.findAll({ where: { userId, folderId: null, status: 'READY' } });
 
@@ -48,7 +49,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 router.get('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const folder = await Folder.findOne({ where: { id, userId } });
     if (!folder) {
@@ -69,7 +70,7 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
 router.delete('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const folder = await Folder.findOne({ where: { id, userId } });
     if (!folder) {
@@ -89,7 +90,7 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
 router.patch('/:id', async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name } = req.body;
 
     const folder = await Folder.findOne({ where: { id, userId } });

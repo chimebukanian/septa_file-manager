@@ -1,7 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { File, ShareToken } from '../models';
-import { authenticateToken, AuthRequest } from '../middlewares/authMiddleware';
+import { authenticateToken, type AuthRequest } from '../middlewares/authMiddleware';
 import { generateDownloadUrl } from '../services/s3Service';
 
 const router = Router();

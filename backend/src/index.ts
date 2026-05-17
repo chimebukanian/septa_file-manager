@@ -1,19 +1,29 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import sequelize from './config/database';
+import sequelize from './config/database.js';
 import './models'; // Import models to initialize associations
 
-import authRoutes from './routes/auth';
-import folderRoutes from './routes/folders';
-import uploadRoutes from './routes/uploads';
-import shareRoutes from './routes/share';
+import authRoutes from './routes/auth.js';
+import folderRoutes from './routes/folders.js';
+import uploadRoutes from './routes/uploads.js';
+import shareRoutes from './routes/share.js';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Logger middleware to track endpoint hits
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`);
+  });
+  next();
+});
 
 app.use('/auth', authRoutes);
 app.use('/folders', folderRoutes);

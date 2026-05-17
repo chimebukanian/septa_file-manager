@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, type Request, type Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models';
@@ -26,6 +26,11 @@ router.post('/register', async (req: Request, res: Response) => {
 
     const user = await User.create({ email, passwordHash });
 
+    if (!user.id) {
+      console.error('FATAL: User created without an ID. Check shadowing in model.');
+      throw new Error('Internal Server Error');
+    }
+
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
     res.status(201).json({ token });
@@ -49,11 +54,16 @@ router.post('/login', async (req: Request, res: Response) => {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
-
+    console.log("typeof password, typeof user.passwordHash", typeof password, user.passwordHash)
     const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
+    }
+
+    if (!user.id) {
+      console.error('FATAL: User retrieved without an ID. Check shadowing in model.');
+      throw new Error('Internal Server Error');
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });

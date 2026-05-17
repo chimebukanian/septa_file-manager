@@ -2,16 +2,16 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
 class File extends Model {
-  public id!: string;
-  public name!: string;
-  public size!: number;
-  public userId!: string;
-  public folderId!: string | null;
-  public status!: 'PENDING' | 'READY';
-  public storageKey!: string;
-  public deletedAt!: Date | null;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare id: string;
+  declare name: string;
+  declare size: number;
+  declare userId: string;
+  declare folderId: string | null;
+  declare status: 'PENDING' | 'READY';
+  declare storageKey: string;
+  declare deletedAt: Date | null;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 File.init(

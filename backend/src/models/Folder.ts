@@ -2,13 +2,13 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
 
 class Folder extends Model {
-  public id!: string;
-  public name!: string;
-  public userId!: string;
-  public parentId!: string | null;
-  public deletedAt!: Date | null;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  declare id: string;
+  declare name: string;
+  declare userId: string;
+  declare parentId: string | null;
+  declare deletedAt: Date | null;
+  declare readonly createdAt: Date;
+  declare readonly updatedAt: Date;
 }
 
 Folder.init(
