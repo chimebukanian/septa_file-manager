@@ -50,7 +50,7 @@ This is a file management application with a backend API built using Node.js/Exp
 
 ## 4. What I'd do differently with more time
 
-- **Database Migrations**: Currently, we use `sequelize.sync({ alter: true })` for rapid prototyping. In production, I would use `umzug` or Sequelize CLI for formal up/down migrations.
+- **Database Migrations**: Currently, I use `sequelize.sync({ alter: true })` for rapid prototyping. In production, I would use `umzug` or Sequelize CLI for formal up/down migrations.
 - **Chunked Uploads**: For very large files, a Multipart Upload flow using S3's API would be more resilient than a single PUT request.
 - **Background Jobs**: The recursive soft-delete logic is executed synchronously in the request handler. For deeply nested folders with thousands of files, this could timeout. I would move this to a background queue (like BullMQ).
 
