@@ -65,6 +65,11 @@ router.post('/file/:id', authenticateToken, async (req: AuthRequest, res: Respon
       expiresAt,
     });
 
+    
+    if (!file.isShared) {
+      await file.update({ isShared: true });
+    }
+
     res.status(201).json(shareToken);
   } catch (error) {
     console.error(error);

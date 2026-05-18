@@ -110,7 +110,7 @@ router.patch('/:id', authenticateToken, async (req: AuthRequest, res: Response) 
       return;
     }
 
-    // verify the target folder exists and belongs to the user
+    
     if (folderId) {
       const folder = await Folder.findOne({ where: { id: folderId, userId } });
       if (!folder) {

@@ -8,6 +8,7 @@ class File extends Model {
   declare userId: string;
   declare folderId: string | null;
   declare status: 'PENDING' | 'READY';
+  declare isShared: boolean;
   declare storageKey: string;
   declare deletedAt: Date | null;
   declare readonly createdAt: Date;
@@ -40,6 +41,10 @@ File.init(
     status: {
       type: DataTypes.ENUM('PENDING', 'READY'),
       defaultValue: 'PENDING',
+    },
+    isShared: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     storageKey: {
       type: DataTypes.STRING,
