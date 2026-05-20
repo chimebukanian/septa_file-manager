@@ -29,3 +29,7 @@ coverage/
 .idea/
 .DS_Store
 Thumbs.db
+
+# 
+CLAUDE.md
+AGENTS.md
