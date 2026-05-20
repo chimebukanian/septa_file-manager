@@ -1,0 +1,67 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+export class ApiClient {
+  static async request(endpoint: string, options: RequestInit = {}) {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    
+    const headers: HeadersInit = {
+      ...options.headers,
+    };
+    
+    // Only set Content-Type to application/json if we are not sending FormData
+    if (!(options.body instanceof FormData) && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers,
+    });
+
+    if (!res.ok) {
+      let errorMessage = 'An error occurred';
+      try {
+        const errorData = await res.json();
+        errorMessage = errorData.error || errorMessage;
+      } catch (e) {
+        // Ignored
+      }
+      throw new Error(errorMessage);
+    }
+
+    // Some endpoints might return 204 No Content
+    if (res.status === 204) {
+      return null;
+    }
+
+    return res.json();
+  }
+
+  static get(endpoint: string, options?: RequestInit) {
+    return this.request(endpoint, { ...options, method: 'GET' });
+  }
+
+  static post(endpoint: string, body: any, options?: RequestInit) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'POST',
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    });
+  }
+
+  static patch(endpoint: string, body: any, options?: RequestInit) {
+    return this.request(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    });
+  }
+
+  static delete(endpoint: string, options?: RequestInit) {
+    return this.request(endpoint, { ...options, method: 'DELETE' });
+  }
+}
