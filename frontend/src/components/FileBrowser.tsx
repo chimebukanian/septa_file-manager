@@ -95,10 +95,8 @@ export default function FileBrowser() {
 
   const handleMoveFile = async (fileId: string, targetFolderId: string) => {
     try {
-      // Note: This assumes your backend has a PATCH endpoint for files
       await ApiClient.patch(`/uploads/${fileId}`, { folderId: targetFolderId });
 
-      // Remove from current view since it moved to a subfolder
       setFiles(files.filter(f => f.id !== fileId));
     } catch (err) {
       console.error(err);
@@ -119,14 +117,12 @@ export default function FileBrowser() {
 
       toast.success('Share link copied to clipboard!');
 
-      // Update local state so the indicator appears immediately
       setFiles(files.map(f => f.id === id ? { ...f, isShared: true } : f));
     } catch (err) {
       toast.error('Failed to generate share link');
     }
   };
 
-  // Upload logic would go here (omitted for brevity, handled in a dedicated zone usually)
 
   if (error) {
     return (
