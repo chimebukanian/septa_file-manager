@@ -4,6 +4,12 @@ import { generatePresignedUrl, verifyFileExists } from '../services/s3Service';
 import { Folder, File } from '../models';
 import { AuthRequest } from '../middlewares/authMiddleware';
 
+// Define an interface for the update data
+interface FileUpdateData {
+    folderId?: string | null;
+    name?: string;
+    isShared?: boolean;
+}
 export const initUpload = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user!.id;
@@ -13,7 +19,7 @@ export const initUpload = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ error: 'Filename and size are required' });
         }
 
-        
+
         const BLOCKED_EXTENSIONS = [
             '.py', '.java', '.sql', '.js', '.ts', '.jsx', '.tsx', '.c', '.cpp', '.h', '.cs', '.go', '.rs', '.rb', '.php', '.sh', '.bat', '.cmd', '.ps1', '.pl', '.swift', '.kt'
         ];
@@ -102,7 +108,7 @@ export const updateFile = async (req: AuthRequest, res: Response) => {
             }
         }
 
-        const updateData: any = {};
+        const updateData: FileUpdateData = {}; // Use the new interface
         if (folderId !== undefined) updateData.folderId = folderId;
         if (name !== undefined) updateData.name = name;
         if (isShared !== undefined) updateData.isShared = isShared;

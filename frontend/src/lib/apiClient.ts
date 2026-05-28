@@ -26,7 +26,7 @@ export class ApiClient {
         const errorData = await res.json();
         errorMessage = errorData.error || errorMessage;
       } catch (e) {
-        
+
       }
       throw new Error(errorMessage);
     }
@@ -43,7 +43,7 @@ export class ApiClient {
     return this.request(endpoint, { ...options, method: 'GET' });
   }
 
-  static post(endpoint: string, body: any, options?: RequestInit) {
+  static post(endpoint: string, body: FormData | object, options?: RequestInit) {
     return this.request(endpoint, {
       ...options,
       method: 'POST',
@@ -51,7 +51,7 @@ export class ApiClient {
     });
   }
 
-  static patch(endpoint: string, body: any, options?: RequestInit) {
+  static patch(endpoint: string, body: object, options?: RequestInit) {
     return this.request(endpoint, {
       ...options,
       method: 'PATCH',

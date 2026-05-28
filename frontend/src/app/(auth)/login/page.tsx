@@ -20,8 +20,9 @@ export default function LoginPage() {
     try {
       const data = await ApiClient.post('/auth/login', { email, password });
       login(data.token);
-    } catch (err: any) {
-      setError(err.message || 'Failed to login');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to login';
+      setError(message);
     } finally {
       setLoading(false);
     }

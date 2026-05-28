@@ -11,7 +11,7 @@ const BLOCKED_EXTENSIONS = [
 
 const isBlockedFile = (filename: string): boolean => {
   const parts = filename.split('.');
-  if (parts.length <= 1) return false; 
+  if (parts.length <= 1) return false;
   const extension = '.' + parts.pop()?.toLowerCase();
   return BLOCKED_EXTENSIONS.includes(extension);
 };
@@ -56,7 +56,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
     if (e.target.files && e.target.files.length > 0) {
       processFiles(Array.from(e.target.files));
       if (fileInputRef.current) {
-        fileInputRef.current.value = ''; 
+        fileInputRef.current.value = '';
       }
     }
   };
@@ -113,7 +113,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
       // Uploading to S3 using XHR for progress
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        
+
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
             const progress = Math.round((event.loaded / event.total) * 100);
@@ -141,9 +141,10 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
 
       updateUploadStatus(upload.id, 'success');
       onUploadComplete();
-      
-    } catch (err: any) {
-      updateUploadStatus(upload.id, 'error', err.message || 'Upload failed');
+
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      updateUploadStatus(upload.id, 'error', message);
     }
   };
 
@@ -157,17 +158,17 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
 
   return (
     <div className="mt-6 flex flex-col gap-4">
-      <div 
+      <div
         className={`relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl transition-colors ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => fileInputRef.current?.click()}
       >
-        <input 
-          type="file" 
-          multiple 
-          className="hidden" 
+        <input
+          type="file"
+          multiple
+          className="hidden"
           ref={fileInputRef}
           onChange={handleFileSelect}
         />
@@ -188,8 +189,8 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
                   {upload.status === 'uploading' && <span className="text-xs text-gray-500">{upload.progress}%</span>}
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-1.5">
-                  <div 
-                    className={`h-1.5 rounded-full ${upload.status === 'error' ? 'bg-red-500' : upload.status === 'success' ? 'bg-green-500' : 'bg-blue-600 transition-all duration-300'}`} 
+                  <div
+                    className={`h-1.5 rounded-full ${upload.status === 'error' ? 'bg-red-500' : upload.status === 'success' ? 'bg-green-500' : 'bg-blue-600 transition-all duration-300'}`}
                     style={{ width: `${upload.status === 'error' ? 100 : upload.progress}%` }}
                   ></div>
                 </div>

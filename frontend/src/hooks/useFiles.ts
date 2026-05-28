@@ -33,7 +33,7 @@ export function useFiles(currentFolderId: string | null) {
 
       setFolders(data.folders || []);
       setFiles(data.files || []);
-    } catch (err: any) {
+    } catch (err: Error) { // Changed from any to Error, as apiClient throws Error
       setError(err.message || 'Failed to load contents');
     } finally {
       setLoading(false);
