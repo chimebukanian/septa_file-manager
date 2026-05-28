@@ -1,7 +1,7 @@
 import { Folder, File } from '../models';
 
 export const recursiveSoftDeleteFolder = async (folderId: string, userId: string) => {
-  // First, find all child folders recursively
+  
   const getChildrenIds = async (id: string): Promise<string[]> => {
     const children = await Folder.findAll({ where: { parentId: id, userId } });
     const childrenIds = children.map(c => c.id);
@@ -15,7 +15,7 @@ export const recursiveSoftDeleteFolder = async (folderId: string, userId: string
 
   const allFolderIdsToDelete = [folderId, ...(await getChildrenIds(folderId))];
 
-  // Soft delete all files within these folders
+  
   await File.destroy({
     where: {
       folderId: allFolderIdsToDelete,
@@ -23,7 +23,7 @@ export const recursiveSoftDeleteFolder = async (folderId: string, userId: string
     },
   });
 
-  // Soft delete all folders
+ 
   await Folder.destroy({
     where: {
       id: allFolderIdsToDelete,

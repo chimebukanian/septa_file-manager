@@ -36,7 +36,7 @@ Folder.init(
     modelName: 'Folder',
     tableName: 'folders',
     timestamps: true,
-    paranoid: true, // Enables soft deletes via deletedAt
+    paranoid: true,
   }
 );
 

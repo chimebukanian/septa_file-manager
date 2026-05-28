@@ -29,7 +29,7 @@ export default function FileBrowser() {
   const [creatingFolder, setCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
 
-  // Modals state
+  
   const [confirmDelete, setConfirmDelete] = useState<{
     isOpen: boolean;
     type: 'folder' | 'file';
@@ -57,7 +57,7 @@ export default function FileBrowser() {
     if (folderId === null) {
       setBreadcrumbs([{ id: null, name: 'Home' }]);
     } else {
-      // Manage breadcrumb trail
+      
       const index = breadcrumbs.findIndex(b => b.id === folderId);
       if (index !== -1) {
         setBreadcrumbs(breadcrumbs.slice(0, index + 1));

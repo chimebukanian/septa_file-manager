@@ -4,7 +4,7 @@ import { generatePresignedUrl, verifyFileExists } from '../services/s3Service';
 import { Folder, File } from '../models';
 import { AuthRequest } from '../middlewares/authMiddleware';
 
-// Define an interface for the update data
+
 interface FileUpdateData {
     folderId?: string | null;
     name?: string;
@@ -100,7 +100,7 @@ export const updateFile = async (req: AuthRequest, res: Response) => {
         const file = await File.findOne({ where: { id, userId } });
         if (!file) return res.status(404).json({ error: 'File not found' });
 
-        // Validate target folder ownership if moving
+        
         if (folderId !== undefined && folderId !== null) {
             const folder = await Folder.findOne({ where: { id: folderId, userId } });
             if (!folder) {
@@ -108,7 +108,7 @@ export const updateFile = async (req: AuthRequest, res: Response) => {
             }
         }
 
-        const updateData: FileUpdateData = {}; // Use the new interface
+        const updateData: FileUpdateData = {}; 
         if (folderId !== undefined) updateData.folderId = folderId;
         if (name !== undefined) updateData.name = name;
         if (isShared !== undefined) updateData.isShared = isShared;

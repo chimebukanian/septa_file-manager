@@ -100,7 +100,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
     }
 
     try {
-      //  Init upload
+      
       const initRes = await ApiClient.post('/uploads/init', {
         filename: upload.file.name,
         size: upload.file.size,
@@ -110,7 +110,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
 
       const { uploadId, presignedUrl } = initRes;
 
-      // Uploading to S3 using XHR for progress
+      
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
@@ -136,7 +136,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
         xhr.send(upload.file);
       });
 
-      // Complete upload
+      
       await ApiClient.post(`/uploads/${uploadId}/complete`, {});
 
       updateUploadStatus(upload.id, 'success');

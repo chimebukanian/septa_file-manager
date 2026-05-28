@@ -4,7 +4,7 @@ import { File, ShareToken } from '../models';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import { generateDownloadUrl } from '../services/s3Service';
 
-// Define the structure of the File object when included with ShareToken
+
 interface AssociatedFile {
   id: string;
   name: string;
@@ -12,10 +12,10 @@ interface AssociatedFile {
   status: 'PENDING' | 'READY';
   storageKey: string;
   isShared: boolean;
-  // Add any other properties of the File model that might be accessed
+  
 }
 
-// Define the structure of the ShareToken object when it includes the File
+
 interface ShareTokenWithFileAssociation extends ShareToken {
   file: AssociatedFile;
 }
@@ -27,7 +27,7 @@ export const getSharedFile = async (req: Request, res: Response): Promise<void> 
     const shareToken = await ShareToken.findOne({
       where: { token },
       include: [{ model: File, as: 'file' }],
-    }) as ShareTokenWithFileAssociation | null; // Cast the result to include the 'file' association
+    }) as ShareTokenWithFileAssociation | null; 
 
     if (!shareToken) {
       res.status(404).json({ error: 'Invalid or expired share link' });
@@ -35,12 +35,12 @@ export const getSharedFile = async (req: Request, res: Response): Promise<void> 
     }
 
     if (new Date() > shareToken.expiresAt) {
-      await shareToken.destroy(); // Cleanup expired token
+      await shareToken.destroy(); 
       res.status(404).json({ error: 'Share link has expired' });
       return;
     }
 
-    const file = shareToken.file; // Now directly access file
+    const file = shareToken.file; 
     if (!file || file.status !== 'READY') {
       res.status(404).json({ error: 'File is not available' });
       return;
@@ -67,7 +67,7 @@ export const createShareToken = async (req: AuthRequest, res: Response): Promise
 
     const token = uuidv4().replace(/-/g, '').substring(0, 16);
 
-    // Set expiry to 7 days from now
+  
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 

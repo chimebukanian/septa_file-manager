@@ -6,7 +6,7 @@ export class ApiClient {
 
     const headers = new Headers(options.headers);
 
-    // Only set Content-Type to application/json if we are not sending FormData
+    
     if (!(options.body instanceof FormData) && !headers.has('Content-Type')) {
       headers.set('Content-Type', 'application/json');
     }
@@ -31,7 +31,6 @@ export class ApiClient {
       throw new Error(errorMessage);
     }
 
-    // Some endpoints might return 204 No Content
     if (res.status === 204) {
       return null;
     }

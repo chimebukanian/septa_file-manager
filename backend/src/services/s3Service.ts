@@ -10,7 +10,7 @@ const s3Client = new S3Client({
     accessKeyId: process.env.S3_ACCESS_KEY || 'minioadmin',
     secretAccessKey: process.env.S3_SECRET_KEY || 'minioadmin',
   },
-  forcePathStyle: true, // Required for MinIO
+  forcePathStyle: true, 
 });
 
 export const generatePresignedUrl = async (key: string, contentType: string) => {
