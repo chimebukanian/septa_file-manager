@@ -56,7 +56,7 @@ File.init(
     modelName: 'File',
     tableName: 'files',
     timestamps: true,
-    paranoid: true, // Enables soft deletes
+    paranoid: true, 
   }
 );
 

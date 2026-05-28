@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
-import './models'; // Import models to initialize associations
+import './models'; 
 
 import authRoutes from './routes/auth.js';
 import folderRoutes from './routes/folders.js';
@@ -30,7 +30,6 @@ app.use('/folders', folderRoutes);
 app.use('/uploads', uploadRoutes);
 app.use('/share', shareRoutes);
 
-// Simple health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });

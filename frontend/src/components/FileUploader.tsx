@@ -3,6 +3,18 @@
 import { useState, useRef, useCallback } from 'react';
 import { UploadCloud, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { ApiClient } from '@/lib/apiClient';
+import { toast } from 'sonner';
+
+const BLOCKED_EXTENSIONS = [
+  '.py', '.java', '.sql', '.js', '.ts', '.jsx', '.tsx', '.c', '.cpp', '.h', '.cs', '.go', '.rs', '.rb', '.php', '.sh', '.bat', '.cmd', '.ps1', '.pl', '.swift', '.kt'
+];
+
+const isBlockedFile = (filename: string): boolean => {
+  const parts = filename.split('.');
+  if (parts.length <= 1) return false; // No extension
+  const extension = '.' + parts.pop()?.toLowerCase();
+  return BLOCKED_EXTENSIONS.includes(extension);
+};
 
 interface UploadingFile {
   id: string;
@@ -44,13 +56,30 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
     if (e.target.files && e.target.files.length > 0) {
       processFiles(Array.from(e.target.files));
       if (fileInputRef.current) {
-        fileInputRef.current.value = ''; // Reset input
+        fileInputRef.current.value = ''; 
       }
     }
   };
 
   const processFiles = (files: File[]) => {
-    const newUploads = files.map(file => ({
+    const validFiles: File[] = [];
+    const blockedFiles: File[] = [];
+
+    files.forEach(file => {
+      if (isBlockedFile(file.name)) {
+        blockedFiles.push(file);
+      } else {
+        validFiles.push(file);
+      }
+    });
+
+    if (blockedFiles.length > 0) {
+      toast.error(`Blocked upload of programming files: ${blockedFiles.map(f => f.name).join(', ')}`);
+    }
+
+    if (validFiles.length === 0) return;
+
+    const newUploads = validFiles.map(file => ({
       id: Math.random().toString(36).substring(7),
       file,
       progress: 0,
@@ -71,7 +100,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
     }
 
     try {
-      // 1. Init upload
+      //  Init upload
       const initRes = await ApiClient.post('/uploads/init', {
         filename: upload.file.name,
         size: upload.file.size,
@@ -81,7 +110,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
 
       const { uploadId, presignedUrl } = initRes;
 
-      // 2. Upload to S3 using XHR for progress
+      // Upload to S3 using XHR for progress
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         
@@ -107,7 +136,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
         xhr.send(upload.file);
       });
 
-      // 3. Complete upload
+      // Complete upload
       await ApiClient.post(`/uploads/${uploadId}/complete`, {});
 
       updateUploadStatus(upload.id, 'success');
