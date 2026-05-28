@@ -11,7 +11,7 @@ const BLOCKED_EXTENSIONS = [
 
 const isBlockedFile = (filename: string): boolean => {
   const parts = filename.split('.');
-  if (parts.length <= 1) return false; // No extension
+  if (parts.length <= 1) return false; 
   const extension = '.' + parts.pop()?.toLowerCase();
   return BLOCKED_EXTENSIONS.includes(extension);
 };
@@ -110,7 +110,7 @@ export default function FileUploader({ currentFolderId, onUploadComplete }: File
 
       const { uploadId, presignedUrl } = initRes;
 
-      // Upload to S3 using XHR for progress
+      // Uploading to S3 using XHR for progress
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         

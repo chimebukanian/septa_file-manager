@@ -26,7 +26,7 @@ export class ApiClient {
         const errorData = await res.json();
         errorMessage = errorData.error || errorMessage;
       } catch (e) {
-        // Ignored
+        
       }
       throw new Error(errorMessage);
     }

@@ -13,7 +13,7 @@ export const initUpload = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ error: 'Filename and size are required' });
         }
 
-        // Validate file extension to prevent common programming languages
+        
         const BLOCKED_EXTENSIONS = [
             '.py', '.java', '.sql', '.js', '.ts', '.jsx', '.tsx', '.c', '.cpp', '.h', '.cs', '.go', '.rs', '.rb', '.php', '.sh', '.bat', '.cmd', '.ps1', '.pl', '.swift', '.kt'
         ];

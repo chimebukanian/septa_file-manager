@@ -15,7 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Logger middleware to track endpoint hits
+
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -40,7 +40,7 @@ const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log('Database connected successfully.');
-    // In production, use migrations instead of sync
+    
     await sequelize.sync({ alter: true });
     console.log('Database synced.');
 
