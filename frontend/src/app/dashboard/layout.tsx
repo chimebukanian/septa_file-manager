@@ -17,7 +17,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <div className="flex items-center">
                 <Link href="/dashboard" className="flex items-center gap-2">
                   <FolderHeart className="h-8 w-8 text-blue-600" />
-                  <span className="text-xl font-bold text-gray-900 tracking-tight">CloudVault</span>
+                  <span className="text-xl font-bold text-gray-900 tracking-tight">Septa CloudVault</span>
                 </Link>
               </div>
               <div className="flex items-center gap-4">
